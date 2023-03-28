@@ -53,14 +53,14 @@ int main() {
     }
 
     int playerX, playerY;
-    int visibilityRadius = 1000; // Set the desired visibility radius.
+    int visibilityRadius = 10; // Set the desired visibility radius.
 
     auto map = MapGenerator::generateMap(mapWidth, mapHeight);
 
     // Find an open space near the entrance for the player
     for (int i = 0; i < mapHeight; ++i) {
         for (int j = 0; j < mapWidth; ++j) {
-            if (map[i][j] == 'Ω') {
+            if (map[i][j] == 'E') {
                 playerX = j;
                 playerY = i;
                 break;

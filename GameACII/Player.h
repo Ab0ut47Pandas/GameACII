@@ -14,8 +14,10 @@ public:
 	void heal(int amount);
 
 	void addItem(const std::string& item, int quantity);
-	void removeItem(const std::string& item, int quantity);
+	bool removeItem(const std::string& item, int quantity);
 	void upgradeInventory(int newSize);
+
+	void usePotion(const std::string& potionName);
 
 	//addmore
 
@@ -26,7 +28,7 @@ private:
 	int maxHealth;
 	int resource;
 
-	std::map<std::string&, int> inventory;
+	std::map<std::string, int> inventory;
 	int maxInventorySize;
 
 	std::map<std::string, int> potionEffects;

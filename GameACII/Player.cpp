@@ -35,6 +35,15 @@ void Player::addItem(const std::string& item, int quantity) {
 bool Player::removeItem(const std::string& item, int quantity) {
 	if (inventory[item] >= quantity) {
 		inventory[item] -= quantity;
-
+		return true;
 	}
+	return false;
+}
+
+void Player::upgradeInventory(int newSize) {
+	maxInventorySize = newSize;
+}
+
+void Player::usePotion(const std::string& potionName) {
+	// Implement potion effects and duration logic here
 }
