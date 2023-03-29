@@ -24,6 +24,8 @@ std::vector<std::string> MapGenerator::generateMap(int width, int height) {
     std::queue<std::pair<int, int>> pathQueue;
     pathQueue.push({ entranceX, entranceY });
 
+
+
     while (!pathQueue.empty()) {
         int x = pathQueue.front().first;
         int y = pathQueue.front().second;

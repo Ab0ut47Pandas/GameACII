@@ -38,7 +38,26 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
     }
 }
 
-bool isPassable(const std::vector<std::string>& map, int x, int y) {
+void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
+    map = MapGenerator::generateMap(mapWidth, mapHeight);
+
+    // Find the entrance for the player
+    for (int i = 0; i < mapHeight; ++i) {
+        for (int j = 0; j < mapWidth; ++j) {
+            if (map[i][j] == 'E') {
+                playerX = j;
+                playerY = i;
+                break;
+            }
+        }
+    }
+}
+
+bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitReached) {
+    if (map[y][x] == 'X') {
+        exitReached = true;
+        return true;
+    }
     return (map[y][x] == '.' || map[y][x] == playerSymbol);
 }
 
@@ -67,6 +86,8 @@ int main() {
             }
         }
     }
+
+    bool exitReached = false;
 
     while (true) {
         draw(map, playerX, playerY, visibilityRadius);
@@ -104,13 +125,17 @@ int main() {
             continue;
         }
 
-        if (isPassable(map, newX, newY)) {
+        if (isPassable(map, newX, newY, exitReached)) {
             map[playerY][playerX] = '.';
             playerX = newX;
             playerY = newY;
             map[playerY][playerX] = playerSymbol;
+
+            if (exitReached) {
+                loadNewMap(map, playerX, playerY);
+                exitReached = false;
+            }
         }
     }
-
     return 0;
 }
