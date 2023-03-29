@@ -1,51 +1,82 @@
 ﻿#include "MapGenerator.h"
 #include <ctime>
 #include <cstdlib>
+#include <queue>
+#include <utility>
+
+enum Direction {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
 
 std::vector<std::string> MapGenerator::generateMap(int width, int height) {
     std::srand(static_cast<unsigned>(std::time(nullptr)));
 
-    std::vector<std::string> map(height);
+    std::vector<std::string> map(height, std::string(width, '#'));
 
-    // Generate the initial map
-    for (int i = 0; i < height; ++i) {
-        std::string row;
-        for (int j = 0; j < width; ++j) {
-            if (i == 0 || i == height - 1 || j == 0 || j == width - 1) {
-                row.push_back('#');
+    // Set the entrance and exit positions
+    int entranceX = 1, entranceY = 1;
+    int exitX = width - 2, exitY = height - 2;
+
+    // Create a valid path between entrance and exit
+    std::queue<std::pair<int, int>> pathQueue;
+    pathQueue.push({ entranceX, entranceY });
+
+    while (!pathQueue.empty()) {
+        int x = pathQueue.front().first;
+        int y = pathQueue.front().second;
+        pathQueue.pop();
+
+        // Check if the current position is the exit
+        if (x == exitX && y == exitY) {
+            break;
+        }
+
+        // Generate a random order of directions
+        std::vector<Direction> directions = { UP, DOWN, LEFT, RIGHT };
+        std::random_shuffle(directions.begin(), directions.end());
+
+        for (Direction direction : directions) {
+            int newX = x;
+            int newY = y;
+
+            switch (direction) {
+            case UP:
+                newY -= 1;
+                break;
+            case DOWN:
+                newY += 1;
+                break;
+            case LEFT:
+                newX -= 1;
+                break;
+            case RIGHT:
+                newX += 1;
+                break;
             }
-            else {
-                row.push_back(std::rand() % 100 < 30 ? '#' : '.');
+
+            // Check if the new position is inside the map and not visited
+            if (newX >= 1 && newX < width - 1 && newY >= 1 && newY < height - 1 && map[newY][newX] == '#') {
+                map[newY][newX] = '.';
+                pathQueue.push({ newX, newY });
             }
         }
-        map[i] = row;
     }
 
-    // Fill dead-ends
-    bool filledDeadEnd;
-    do {
-        filledDeadEnd = false;
-
-        for (int i = 1; i < height - 1; ++i) {
-            for (int j = 1; j < width - 1; ++j) {
-                if (map[i][j] == '.') {
-                    int surroundingWalls = 0;
-                    if (map[i - 1][j] == '#') surroundingWalls++;
-                    if (map[i + 1][j] == '#') surroundingWalls++;
-                    if (map[i][j - 1] == '#') surroundingWalls++;
-                    if (map[i][j + 1] == '#') surroundingWalls++;
-
-                    if (surroundingWalls >= 3) {
-                        map[i][j] = '#';
-                        filledDeadEnd = true;
-                    }
-                }
+    // Add some random walls to make the map more interesting
+    for (int i = 1; i < height - 1; ++i) {
+        for (int j = 1; j < width - 1; ++j) {
+            if (map[i][j] == '.' && std::rand() % 100 < 30) {
+                map[i][j] = '#';
             }
         }
-    } while (filledDeadEnd);
+    }
 
-    // Set a fixed starting position for the player
-    map[1][1] = '@';
+    // Set the entrance and exit symbols
+    map[entranceY][entranceX] = 'E';
+    map[exitY][exitX] = 'X';
 
     return map;
 }

@@ -52,7 +52,7 @@ int main() {
         return 0;
     }
 
-    int playerX, playerY;
+    int playerX = 0, playerY = 0;
     int visibilityRadius = 10; // Set the desired visibility radius.
 
     auto map = MapGenerator::generateMap(mapWidth, mapHeight);
@@ -67,11 +67,25 @@ int main() {
             }
         }
     }
-   
+
     while (true) {
         draw(map, playerX, playerY, visibilityRadius);
         char input = _getch();
         int newX = playerX, newY = playerY;
+        if (input == 'r' || input == 'R') {
+            map = MapGenerator::generateMap(mapWidth, mapHeight);
+            // Find the entrance for the player
+            for (int i = 0; i < mapHeight; ++i) {
+                for (int j = 0; j < mapWidth; ++j) {
+                    if (map[i][j] == 'E') {
+                        playerX = j;
+                        playerY = i;
+                        break;
+                    }
+                }
+            }
+            continue;
+        }
 
         switch (input) {
         case 72: // Up
