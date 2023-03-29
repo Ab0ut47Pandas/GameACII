@@ -11,13 +11,14 @@ Player::Player() :
 
 void Player::gainExperience(int xp) {
 	experience += xp;
-	//Leveling logic here pls
+	//Leveling logic
 }
 
 void Player::takeDamage(int damage) {
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
+		//if statement for percent damage per turn? Traps/spells that do percent damage?
 	}
 }
 
@@ -25,6 +26,7 @@ void Player::heal(int amount) {
 	health += amount;
 	if (health > maxHealth) {
 		health = maxHealth;
+		//If statement for percent heal per turn; potions/spells that do percent healing?
 	}
 }
 

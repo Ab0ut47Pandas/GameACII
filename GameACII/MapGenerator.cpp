@@ -2,7 +2,9 @@
 #include <ctime>
 #include <cstdlib>
 #include <queue>
-#include <utility>
+#include <vector>
+
+
 
 enum Direction {
     UP,
@@ -26,6 +28,40 @@ void floodFill(std::vector<std::string>& map, int x, int y, char oldChar, char n
     floodFill(map, x + 1, y, oldChar, newChar);
     floodFill(map, x, y - 1, oldChar, newChar);
     floodFill(map, x, y + 1, oldChar, newChar);
+}
+
+bool MapGenerator::lineOfSight(int x1, int y1, int x2, int y2, const std::vector<std::string>& map) {
+    //Learn about Bresenham's line Algo
+    //Figure the best place in main for this algo
+    //This DOES NOT affect the map visually, this is logic for calculating if there is an object. 
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+    int x = x1;
+    int y = y1;
+    int n = 1 + dx + dy;
+    int x_inc = (x2 > x1) ? 1 : -1;
+    int y_inc = (y2 > y1) ? 1 : -1;
+    int error = dx - dy;
+    dx *= 2;
+    dy *= 2;
+
+    while (n > 0) {
+        if (map[y][x] == '#') {
+            return false;
+        }
+
+        if (error > 0) {
+            x += x_inc;
+            error -= dy;
+        }
+        else {
+            y += y_inc;
+            error += dx;
+        }
+        n--;
+    }
+
+    return true;
 }
 
 std::vector<std::string> MapGenerator::generateMap(int width, int height) {
@@ -130,4 +166,5 @@ std::vector<std::string> MapGenerator::generateMap(int width, int height) {
     map[exitY][exitX] = 'X';
 
     return map;
+
 }
