@@ -68,7 +68,6 @@ bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitRea
 int main() {
     TitleScreen titleScreen;
 
-    titleScreen.display();
     int choice = titleScreen.menu();
 
     if (choice == 2) { // Exit if the choice is "Exit"
