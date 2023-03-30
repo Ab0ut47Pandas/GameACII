@@ -4,6 +4,7 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
+#include <cmath>
 #include "ConsoleUtils.h"
 #include "MapGenerator.h"
 #include "TitleScreen.h"
@@ -11,6 +12,34 @@
 const int mapWidth = 50;
 const int mapHeight = 25;
 const char playerSymbol = '@';
+
+bool lineOfSight(int x0, int y0, int x1, int y1, const std::vector<std::string>& map) {
+    int dx = std::abs(x1 - x0);
+    int dy = std::abs(y1 - y0);
+    int sx = x0 < x1 ? 1 : -1;
+    int sy = y0 < y1 ? 1 : -1;
+
+    int err = dx - dy;
+
+    while (x0 != x1 || y0 != y1) {
+        if (map[y0][x0] == '#') {
+            return false;
+        }
+
+        int e2 = 2 * err;
+
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
+    }
+
+    return true;
+}
 
 void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius) {
     system("cls");
@@ -28,7 +57,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
         for (int j = 0; j < mapWidth; ++j) {
             int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
             setCursorPosition(paddingLeft + j, paddingTop + i);
-            if (distance <= visibilityRadius * visibilityRadius) {
+            if (distance <= visibilityRadius * visibilityRadius && lineOfSight(playerX, playerY, j, i, map)) {
                 std::cout << map[i][j];
             }
             else {
