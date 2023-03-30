@@ -18,7 +18,7 @@
     <ClCompile Include="GameACII.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MapGenerator.cpp">
+    <ClCompile Include="Town.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TitleScreen.cpp">
@@ -38,7 +38,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="MapGenerator.h">
+    <ClInclude Include="Town.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TitleScreen.h">

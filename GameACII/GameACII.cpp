@@ -6,7 +6,7 @@
 #include <windows.h>
 #include <cmath>
 #include "ConsoleUtils.h"
-#include "MapGenerator.h"
+#include "Town.h"
 #include "TitleScreen.h"
 #include "Dungeon.h"
 #include "LineOfSight.h"
@@ -16,7 +16,7 @@ const int mapWidth = 50;
 const int mapHeight = 25;
 const char playerSymbol = '@';
 
-void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius) {
+void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown) {
     system("cls");
 
     int consoleWidth, consoleHeight;
@@ -32,7 +32,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
         for (int j = 0; j < mapWidth; ++j) {
             int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
             setCursorPosition(paddingLeft + j, paddingTop + i);
-            if (distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
+            if (inTown || distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
                 std::cout << map[i][j];
             }
             else {
@@ -57,9 +57,14 @@ void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
     }
 }
 
-bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitReached) {
+bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitReached, bool& enterDungeon) {
     if (map[y][x] == 'X') {
         exitReached = true;
+        return true;
+    }
+
+    if (map[y][x] == 'D') {
+        enterDungeon = true;
         return true;
     }
     return (map[y][x] == '.' || map[y][x] == playerSymbol);
@@ -77,12 +82,16 @@ int main() {
     int playerX = 0, playerY = 0;
     int visibilityRadius = 10; // Set the desired visibility radius.
 
-    auto map = Dungeon::generate(mapWidth, mapHeight);
+    bool inTown = true;
+    int townWidth = 20, townHeight = 10;
+    std::vector<std::string> town = generateTown(townWidth, townHeight);
 
-    // Find an open space near the entrance for the player
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
-            if (map[i][j] == 'E') {
+    auto map = town; // Set the initial map to town
+
+    // Find the player's starting position in the town
+    for (int i = 0; i < townHeight; ++i) {
+        for (int j = 0; j < townWidth; ++j) {
+            if (town[i][j] == '.') {
                 playerX = j;
                 playerY = i;
                 break;
@@ -91,9 +100,9 @@ int main() {
     }
 
     bool exitReached = false;
-
+    bool enterDungeon = false;
     while (true) {
-        draw(map, playerX, playerY, visibilityRadius);
+        draw(map, playerX, playerY, visibilityRadius, inTown);
         char input = _getch();
         int newX = playerX, newY = playerY;
         if (input == 'r' || input == 'R') {
@@ -128,13 +137,18 @@ int main() {
             continue;
         }
 
-        if (isPassable(map, newX, newY, exitReached)) {
+        if (isPassable(map, newX, newY, exitReached, enterDungeon)) {
             map[playerY][playerX] = '.';
             playerX = newX;
             playerY = newY;
             map[playerY][playerX] = playerSymbol;
 
-            if (exitReached) {
+            if (inTown && enterDungeon) {
+                inTown = false;
+                loadNewMap(map, playerX, playerY);
+                enterDungeon = false;
+            }
+            else if (exitReached) {
                 loadNewMap(map, playerX, playerY);
                 exitReached = false;
             }
