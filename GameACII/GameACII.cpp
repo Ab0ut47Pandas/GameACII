@@ -8,38 +8,13 @@
 #include "ConsoleUtils.h"
 #include "MapGenerator.h"
 #include "TitleScreen.h"
+#include "Dungeon.h"
+#include "LineOfSight.h"
+
 
 const int mapWidth = 50;
 const int mapHeight = 25;
 const char playerSymbol = '@';
-
-bool lineOfSight(int x0, int y0, int x1, int y1, const std::vector<std::string>& map) {
-    int dx = std::abs(x1 - x0);
-    int dy = std::abs(y1 - y0);
-    int sx = x0 < x1 ? 1 : -1;
-    int sy = y0 < y1 ? 1 : -1;
-
-    int err = dx - dy;
-
-    while (x0 != x1 || y0 != y1) {
-        if (map[y0][x0] == '#') {
-            return false;
-        }
-
-        int e2 = 2 * err;
-
-        if (e2 > -dy) {
-            err -= dy;
-            x0 += sx;
-        }
-        if (e2 < dx) {
-            err += dx;
-            y0 += sy;
-        }
-    }
-
-    return true;
-}
 
 void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius) {
     system("cls");
@@ -57,7 +32,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
         for (int j = 0; j < mapWidth; ++j) {
             int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
             setCursorPosition(paddingLeft + j, paddingTop + i);
-            if (distance <= visibilityRadius * visibilityRadius && lineOfSight(playerX, playerY, j, i, map)) {
+            if (distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
                 std::cout << map[i][j];
             }
             else {
@@ -68,7 +43,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
 }
 
 void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
-    map = MapGenerator::generateMap(mapWidth, mapHeight);
+    map = Dungeon::generate(mapWidth, mapHeight);
 
     // Find the entrance for the player
     for (int i = 0; i < mapHeight; ++i) {
@@ -103,7 +78,7 @@ int main() {
     int playerX = 0, playerY = 0;
     int visibilityRadius = 10; // Set the desired visibility radius.
 
-    auto map = MapGenerator::generateMap(mapWidth, mapHeight);
+    auto map = Dungeon::generate(mapWidth, mapHeight);
 
     // Find an open space near the entrance for the player
     for (int i = 0; i < mapHeight; ++i) {
@@ -123,7 +98,7 @@ int main() {
         char input = _getch();
         int newX = playerX, newY = playerY;
         if (input == 'r' || input == 'R') {
-            map = MapGenerator::generateMap(mapWidth, mapHeight);
+            map = Dungeon::generate(mapWidth, mapHeight);
             // Find the entrance for the player
             for (int i = 0; i < mapHeight; ++i) {
                 for (int j = 0; j < mapWidth; ++j) {

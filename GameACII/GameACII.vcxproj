@@ -140,13 +140,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleUtils.cpp" />
+    <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="GameACII.cpp" />
+    <ClCompile Include="LineOfSight.cpp" />
     <ClCompile Include="MapGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
+    <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="LineOfSight.h" />
     <ClInclude Include="MapGenerator.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TitleScreen.h" />
