@@ -29,15 +29,11 @@ void Player::heal(int amount) {
 }
 
 void Player::addItem(const std::string& item, int quantity) {
-	inventory[item] += quantity;
+	inventory.addItem(item, quantity);
 }
 
 bool Player::removeItem(const std::string& item, int quantity) {
-	if (inventory[item] >= quantity) {
-		inventory[item] -= quantity;
-		return true;
-	}
-	return false;
+	return inventory.removeItem(item, quantity);
 }
 
 void Player::upgradeInventory(int newSize) {
@@ -46,4 +42,20 @@ void Player::upgradeInventory(int newSize) {
 
 void Player::usePotion(const std::string& potionName) {
 	// Implement potion effects and duration logic here
+}
+
+int Player::getHealth() const {
+	return health;
+}
+
+int Player::getExperience() const {
+	return experience;
+}
+
+int Player::getLevel() const {
+	return level;
+}
+
+void Player::viewInventory() const {
+	//implementation to display the inventory here.
 }

@@ -10,11 +10,16 @@
 #include "TitleScreen.h"
 #include "Dungeon.h"
 #include "LineOfSight.h"
+#include "Player.h"
 
 
 const int mapWidth = 50;
 const int mapHeight = 25;
 const char playerSymbol = '@';
+
+void saveGame(const Player& player) {
+    //implementation to save the game state here.
+}
 
 void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown) {
     system("cls");
@@ -70,6 +75,47 @@ bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitRea
     return (map[y][x] == '.' || map[y][x] == playerSymbol);
 }
 
+void displayUI(Player& player) {
+    // Clear the screen
+    system("cls");
+
+    // Display player stats
+    std::cout << "Player Stats:\n";
+    std::cout << "Health: " << player.getHealth() << "\n";
+    std::cout << "Experience: " << player.getExperience() << "\n";
+    std::cout << "Level: " << player.getLevel() << "\n";
+
+    // Display UI options
+    std::cout << "\nOptions:\n";
+    std::cout << "1. Use a health potion\n";
+    std::cout << "2. View inventory\n";
+    std::cout << "3. Save game\n";
+    std::cout << "4. Exit\n";
+
+    // Get user input
+    int choice;
+    std::cin >> choice;
+
+    // Process user input
+    switch (choice) {
+    case 1:
+        // Use a health potion
+        player.usePotion("health");
+        break;
+    case 2:
+        // View inventory
+        player.viewInventory();
+        break;
+    case 3:
+        // Save game
+        saveGame(player);
+        break;
+    case 4:
+        // Exit
+        exit(0);
+    }
+}
+
 int main() {
     TitleScreen titleScreen;
 
@@ -78,14 +124,16 @@ int main() {
     if (choice == 2) { // Exit if the choice is "Exit"
         return 0;
     }
+    
+    Player player;
 
     int playerX = 0, playerY = 0;
     int visibilityRadius = 10; // Set the desired visibility radius.
 
     bool inTown = true;
     int townWidth = 20, townHeight = 10;
-    std::vector<std::string> town = generateTown(townWidth, townHeight);
-
+    std::vector<std::string> town = generateTown(townWidth, townHeight); 
+    //std::vector<std::string> town = createTown(); //borked
     auto map = town; // Set the initial map to town
 
     // Find the player's starting position in the town
@@ -98,12 +146,20 @@ int main() {
             }
         }
     }
-
+    bool displayUIFlag = false;
     bool exitReached = false;
     bool enterDungeon = false;
     while (true) {
-        draw(map, playerX, playerY, visibilityRadius, inTown);
+        if (!displayUIFlag) {
+            draw(map, playerX, playerY, visibilityRadius, inTown);
+        }
         char input = _getch();
+        if (input == 224) {
+            // Consume the arrow key code
+            _getch();
+            displayUIFlag = false;
+            continue;
+        }
         int newX = playerX, newY = playerY;
         if (input == 'r' || input == 'R') {
             map = Dungeon::generate(mapWidth, mapHeight);
@@ -134,6 +190,7 @@ int main() {
             newX++;
             break;
         default:
+            displayUIFlag = false;
             continue;
         }
 
@@ -153,6 +210,15 @@ int main() {
                 exitReached = false;
             }
         }
+        // Check for UI input (e.g., press 'U' to open UI)
+        if (input == 'u' || input == 'U') {
+            displayUI(player);
+            displayUIFlag = true;
+        }
+        else {
+            displayUIFlag = false;
+        }
+
     }
     return 0;
 }
