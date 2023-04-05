@@ -8,4 +8,5 @@ void setConsoleSize720p();
 void setConsoleFontSize(int size);
 void setConsoleBufferSize(int cols, int rows);
 void setConsoleWindowSize(int cols, int rows);
+void hideCursor();
 #endif // CONSOLEUTILS_H

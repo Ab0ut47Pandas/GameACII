@@ -117,6 +117,7 @@ void displayUI(Player& player) {
 }
 
 int main() {
+    hideCursor();
     TitleScreen titleScreen;
 
     int choice = titleScreen.menu();
