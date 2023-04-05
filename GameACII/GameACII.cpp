@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <windows.h>
 #include <cmath>
+#include <sstream>
 #include "ConsoleUtils.h"
 #include "Town.h"
 #include "TitleScreen.h"
@@ -21,8 +22,19 @@ void saveGame(const Player& player) {
     //implementation to save the game state here.
 }
 
-void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown) {
-    system("cls");
+void clearScreenBuffer(std::ostringstream& buffer, int consoleWidth, int consoleHeight) {
+    for (int i = 0; i < consoleHeight; i++) {
+        for (int j = 0; j < consoleHeight; j++) {
+            buffer << " ";
+        }
+        buffer << '\n';
+    }
+}
+
+void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player) {
+    //system("cls");
+  
+
 
     int consoleWidth, consoleHeight;
     getConsoleSize(consoleWidth, consoleHeight);
@@ -33,6 +45,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
     int paddingTop = (consoleHeight - mapHeight) / 2;
     int paddingLeft = (consoleWidth - mapWidth) / 2;
 
+    //Draw map
     for (int i = 0; i < mapHeight; ++i) {
         for (int j = 0; j < mapWidth; ++j) {
             int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
@@ -45,6 +58,13 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
             }
         }
     }
+    setCursorPosition(0, 0);
+    std::cout << "Player Stats:\n";
+    std::cout << "Health: " << player.getHealth() << "\n";
+    std::cout << "Experience: " << player.getExperience() << "\n";
+    std::cout << "Level: " << player.getLevel() << "\n";
+    std::cout << "\n";
+    //system("cls");
 }
 
 void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
@@ -125,7 +145,7 @@ int main() {
     if (choice == 2) { // Exit if the choice is "Exit"
         return 0;
     }
-
+    system("cls");
     Player player;
 
     int playerX = 0, playerY = 0;
@@ -151,7 +171,7 @@ int main() {
     bool enterDungeon = false;
     while (true) {
         if (!displayUIFlag) {
-            draw(map, playerX, playerY, visibilityRadius, inTown);
+            draw(map, playerX, playerY, visibilityRadius, inTown, player);
         }
 
         int newX = playerX, newY = playerY;
