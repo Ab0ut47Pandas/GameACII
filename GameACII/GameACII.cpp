@@ -154,19 +154,24 @@ int main() {
         }
 
         int newX = playerX, newY = playerY;
+        bool keyPressed = false;
 
         // Check arrow keys and U key state
         if (GetAsyncKeyState(VK_UP) & 0x8000) {
             newY--;
+            keyPressed = true;
         }
         else if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
             newY++;
+            keyPressed = true;
         }
         else if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
             newX--;
+            keyPressed = true;
         }
         else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
             newX++;
+            keyPressed = true;
         }
         else if (GetAsyncKeyState('U') & 0x8000) {
             displayUI(player);
@@ -176,6 +181,10 @@ int main() {
         else {
             displayUIFlag = false;
             Sleep(10); // Add a small delay to reduce CPU usage
+        }
+
+        if (keyPressed) {
+            Sleep(150); // Add a delay after detecting arrow key input to increase movement precision
         }
 
         if (isPassable(map, newX, newY, exitReached, enterDungeon)) {
