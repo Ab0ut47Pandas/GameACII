@@ -124,7 +124,7 @@ int main() {
     if (choice == 2) { // Exit if the choice is "Exit"
         return 0;
     }
-    
+
     Player player;
 
     int playerX = 0, playerY = 0;
@@ -132,8 +132,7 @@ int main() {
 
     bool inTown = true;
     int townWidth = 20, townHeight = 10;
-    std::vector<std::string> town = generateTown(townWidth, townHeight); 
-    //std::vector<std::string> town = createTown(); //borked
+    std::vector<std::string> town = generateTown(townWidth, townHeight);
     auto map = town; // Set the initial map to town
 
     // Find the player's starting position in the town
@@ -153,45 +152,30 @@ int main() {
         if (!displayUIFlag) {
             draw(map, playerX, playerY, visibilityRadius, inTown);
         }
-        char input = _getch();
-        if (input == 224) {
-            // Consume the arrow key code
-            _getch();
-            displayUIFlag = false;
-            continue;
-        }
-        int newX = playerX, newY = playerY;
-        if (input == 'r' || input == 'R') {
-            map = Dungeon::generate(mapWidth, mapHeight);
-            // Find the entrance for the player
-            for (int i = 0; i < mapHeight; ++i) {
-                for (int j = 0; j < mapWidth; ++j) {
-                    if (map[i][j] == 'E') {
-                        playerX = j;
-                        playerY = i;
-                        break;
-                    }
-                }
-            }
-            continue;
-        }
 
-        switch (input) {
-        case 72: // Up
+        int newX = playerX, newY = playerY;
+
+        // Check arrow keys and U key state
+        if (GetAsyncKeyState(VK_UP) & 0x8000) {
             newY--;
-            break;
-        case 80: // Down
+        }
+        else if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
             newY++;
-            break;
-        case 75: // Left
+        }
+        else if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
             newX--;
-            break;
-        case 77: // Right
+        }
+        else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
             newX++;
-            break;
-        default:
+        }
+        else if (GetAsyncKeyState('U') & 0x8000) {
+            displayUI(player);
+            displayUIFlag = true;
+            Sleep(200); // Add a small delay to prevent the UI from flickering
+        }
+        else {
             displayUIFlag = false;
-            continue;
+            Sleep(10); // Add a small delay to reduce CPU usage
         }
 
         if (isPassable(map, newX, newY, exitReached, enterDungeon)) {
@@ -210,15 +194,6 @@ int main() {
                 exitReached = false;
             }
         }
-        // Check for UI input (e.g., press 'U' to open UI)
-        if (input == 'u' || input == 'U') {
-            displayUI(player);
-            displayUIFlag = true;
-        }
-        else {
-            displayUIFlag = false;
-        }
-
     }
     return 0;
 }
