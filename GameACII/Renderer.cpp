@@ -2,6 +2,7 @@
 #include <iostream>
 #include "ConsoleUtils.h"
 #include "lineOfSight.h"
+
 void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player) {
     //system("cls");
 

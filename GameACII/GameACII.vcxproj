@@ -142,6 +142,9 @@
     <ClCompile Include="ConsoleUtils.cpp" />
     <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="GameACII.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameUI.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="LineOfSight.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -153,7 +156,10 @@
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
     <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="GameConfig.h" />
     <ClInclude Include="GameIncludes.h" />
+    <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameUI.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="LineOfSight.h" />
     <ClInclude Include="Renderer.h" />

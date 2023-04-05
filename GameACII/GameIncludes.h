@@ -10,6 +10,10 @@
 #include "Dungeon.h"
 #include "SaveLoad.h"
 #include "renderer.h"
+#include "GameLogic.h"
+#include "GameUI.h"
+#include "GameConfig.h"
+
 // Add any other necessary header files here
 
 #endif // GAMEINCLUDES_H
