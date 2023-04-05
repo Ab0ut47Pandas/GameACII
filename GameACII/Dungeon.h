@@ -7,6 +7,8 @@
 class Dungeon {
 public:
     static std::vector<std::string> generate(int width, int height);
+    //void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY);
 };
 
+void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY);
 #endif // DUNGEON_H

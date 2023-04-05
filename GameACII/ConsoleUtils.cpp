@@ -97,3 +97,15 @@ void setConsoleSize720p() {
         cursorInfo.bVisible = FALSE; // Set the cursor visibility to false
         SetConsoleCursorInfo(consoleHandle, &cursorInfo);
     }
+
+    void clearScreenBuffer(std::ostringstream& buffer, int consoleWidth, int consoleHeight) {
+        buffer.str("");
+        buffer.clear();
+
+        for (int i = 0; i < consoleHeight; ++i) {
+            for (int j = 0; j < consoleWidth; ++j) {
+                buffer << ' ';
+            }
+            buffer << '\n';
+        }
+    }

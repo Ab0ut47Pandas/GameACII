@@ -144,6 +144,8 @@
     <ClCompile Include="GameACII.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="LineOfSight.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SaveLoad.cpp" />
     <ClCompile Include="Town.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
@@ -151,11 +153,15 @@
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
     <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="GameIncludes.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="LineOfSight.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SaveLoad.h" />
     <ClInclude Include="Town.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TitleScreen.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

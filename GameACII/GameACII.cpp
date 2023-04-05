@@ -5,82 +5,13 @@
 #include <conio.h>
 #include <windows.h>
 #include <cmath>
-#include <sstream>
-#include "ConsoleUtils.h"
-#include "Town.h"
-#include "TitleScreen.h"
-#include "Dungeon.h"
-#include "LineOfSight.h"
-#include "Player.h"
+#include "GameIncludes.h"
 
 
-const int mapWidth = 50;
-const int mapHeight = 25;
+const int mapWidth = 100;
+const int mapHeight = 100;
 const char playerSymbol = '@';
 
-void saveGame(const Player& player) {
-    //implementation to save the game state here.
-}
-
-void clearScreenBuffer(std::ostringstream& buffer, int consoleWidth, int consoleHeight) {
-    for (int i = 0; i < consoleHeight; i++) {
-        for (int j = 0; j < consoleHeight; j++) {
-            buffer << " ";
-        }
-        buffer << '\n';
-    }
-}
-
-void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player) {
-    //system("cls");
-  
-
-
-    int consoleWidth, consoleHeight;
-    getConsoleSize(consoleWidth, consoleHeight);
-
-    int mapHeight = static_cast<int>(map.size());
-    int mapWidth = static_cast<int>(map[0].length());
-
-    int paddingTop = (consoleHeight - mapHeight) / 2;
-    int paddingLeft = (consoleWidth - mapWidth) / 2;
-
-    //Draw map
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
-            int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
-            setCursorPosition(paddingLeft + j, paddingTop + i);
-            if (inTown || distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
-                std::cout << map[i][j];
-            }
-            else {
-                std::cout << ' ';
-            }
-        }
-    }
-    setCursorPosition(0, 0);
-    std::cout << "Player Stats:\n";
-    std::cout << "Health: " << player.getHealth() << "\n";
-    std::cout << "Experience: " << player.getExperience() << "\n";
-    std::cout << "Level: " << player.getLevel() << "\n";
-    std::cout << "\n";
-    //system("cls");
-}
-
-void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
-    map = Dungeon::generate(mapWidth, mapHeight);
-
-    // Find the entrance for the player
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
-            if (map[i][j] == 'E') {
-                playerX = j;
-                playerY = i;
-                break;
-            }
-        }
-    }
-}
 
 bool isPassable(const std::vector<std::string>& map, int x, int y, bool& exitReached, bool& enterDungeon) {
     if (map[y][x] == 'X') {
@@ -216,10 +147,14 @@ int main() {
 
             if (inTown && enterDungeon) {
                 inTown = false;
+                //Dungeon dungeon;
+                //dungeon.loadNewMap(map, playerX, playerY);
                 loadNewMap(map, playerX, playerY);
                 enterDungeon = false;
             }
             else if (exitReached) {
+                //Dungeon dungeon;
+                //dungeon.loadNewMap(map, playerX, playerY);
                 loadNewMap(map, playerX, playerY);
                 exitReached = false;
             }
