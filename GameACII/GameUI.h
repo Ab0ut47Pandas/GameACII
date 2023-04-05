@@ -5,5 +5,6 @@
 #include "Player.h"
 
 void displayUI(Player& player);
+void drawStatusBar(const Player& player);
 
 #endif // GAMEUI_H

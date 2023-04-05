@@ -12,4 +12,5 @@ void setConsoleBufferSize(int cols, int rows);
 void setConsoleWindowSize(int cols, int rows);
 void hideCursor();
 void clearScreenBuffer(std::ostringstream& buffer, int consoleWidth, int consoleHeight);
+void clearConsole();
 #endif // CONSOLEUTILS_H

@@ -1,5 +1,6 @@
 #include "GameUI.h"
 #include "SaveLoad.h"
+#include "ConsoleUtils.h"
 
 void displayUI(Player& player) {
     // Clear the screen
@@ -40,4 +41,23 @@ void displayUI(Player& player) {
         // Exit
         exit(0);
     }
+}
+
+void drawStatusBar(const Player& player) {
+    int consoleWidth, consoleHeight;
+    getConsoleSize(consoleWidth, consoleHeight);
+    //hideCursor();
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    std::cout << std::string(consoleWidth, '=') << std::endl;
+    std::cout << "Health: " << player.getHealth()
+        << " | Experience: " << player.getExperience()
+        << " | Level: " << player.getLevel() << std::endl;
+    std::cout << std::string(consoleWidth, '=') << std::endl;
 }

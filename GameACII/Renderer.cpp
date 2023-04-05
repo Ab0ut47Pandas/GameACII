@@ -2,10 +2,12 @@
 #include <iostream>
 #include "ConsoleUtils.h"
 #include "lineOfSight.h"
+#include "GameUI.h"
+#include <windows.h>
 
 void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player) {
     //system("cls");
-
+    
 
 
     int consoleWidth, consoleHeight;
@@ -30,11 +32,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
             }
         }
     }
+  
+    drawStatusBar(player);
     setCursorPosition(0, 0);
-    std::cout << "Player Stats:\n";
-    std::cout << "Health: " << player.getHealth() << "\n";
-    std::cout << "Experience: " << player.getExperience() << "\n";
-    std::cout << "Level: " << player.getLevel() << "\n";
-    std::cout << "\n";
-    //system("cls");
 }

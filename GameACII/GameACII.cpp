@@ -11,6 +11,7 @@
 
 int main() {
     hideCursor();
+
     TitleScreen titleScreen;
 
     int choice = titleScreen.menu();
@@ -89,15 +90,11 @@ int main() {
 
             if (inTown && enterDungeon) {
                 inTown = false;
-                //Dungeon dungeon;
-                //dungeon.loadNewMap(map, playerX, playerY);
-                loadNewMap(map, playerX, playerY);
+                loadNewMap(map, playerX, playerY, dungeonWidth, dungeonHeight);
                 enterDungeon = false;
             }
             else if (exitReached) {
-                //Dungeon dungeon;
-                //dungeon.loadNewMap(map, playerX, playerY);
-                loadNewMap(map, playerX, playerY);
+                loadNewMap(map, playerX, playerY, dungeonWidth, dungeonHeight);
                 exitReached = false;
             }
         }

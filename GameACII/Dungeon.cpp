@@ -132,15 +132,30 @@ std::vector<std::string> Dungeon::generate(int width, int height) {
     return map;
 }
 
-void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
-    int mapWidth = static_cast<int>(map[0].length());
-    int mapHeight = static_cast<int>(map.size());
+//void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY) {
+//    int mapWidth = static_cast<int>(map[0].length());
+//    int mapHeight = static_cast<int>(map.size());
+//
+//    map = Dungeon::generate(mapWidth, mapHeight);
+//
+//    // Find the entrance for the player
+//    for (int i = 0; i < mapHeight; ++i) {
+//        for (int j = 0; j < mapWidth; ++j) {
+//            if (map[i][j] == 'E') {
+//                playerX = j;
+//                playerY = i;
+//                break;
+//            }
+//        }
+//    }
+//}
 
-    map = Dungeon::generate(mapWidth, mapHeight);
+void loadNewMap(std::vector<std::string>& map, int& playerX, int& playerY, int width, int height) {
+    map = Dungeon::generate(width, height);
 
     // Find the entrance for the player
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
+    for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j) {
             if (map[i][j] == 'E') {
                 playerX = j;
                 playerY = i;
