@@ -8,6 +8,7 @@
 #include <unistd.h>
 #endif
 
+
 void getConsoleSize(int& width, int& height) {
 #if defined(_WIN32) || defined(_WIN64)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -129,27 +130,4 @@ void setConsoleSize720p() {
         SetConsoleCursorPosition(console, topLeft);
     }
 
-    LRESULT CALLBACK ConsoleWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-    {
-        switch (uMsg)
-        {
-        case WM_GETMINMAXINFO:
-        {
-            LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
-            lpMMI->ptMinTrackSize.x = 128 * 8;  // 128 columns with 8 pixels per character
-            lpMMI->ptMinTrackSize.y = 40 * 12;  // 40 rows with 12 pixels per character
-        }
-        return 0;
 
-        default:
-            break;
-        }
-
-        return DefWindowProc(hwnd, uMsg, wParam, lParam);
-    }
-
-    void SubclassConsoleWindow() {
-        HWND consoleWindow = GetConsoleWindow();
-        SetWindowLongPtr(consoleWindow, GWLP_USERDATA, (LONG_PTR)ConsoleWindowProc);
-        SetWindowLongPtr(consoleWindow, GWLP_WNDPROC, (LONG_PTR)ConsoleWindowProc);
-    }

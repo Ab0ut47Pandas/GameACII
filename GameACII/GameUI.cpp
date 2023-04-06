@@ -1,6 +1,7 @@
 #include "GameUI.h"
 #include "SaveLoad.h"
 #include "ConsoleUtils.h"
+#include "GameConfig.h"
 
 void displayUI(Player& player) {
     // Clear the screen
@@ -43,12 +44,12 @@ void displayUI(Player& player) {
     }
 }
 
-void drawStatusBar(const Player& player) {
+void drawStatusBar(const Player& player, int top) {
     int consoleWidth, consoleHeight;
     getConsoleSize(consoleWidth, consoleHeight);
-    // Move the cursor to the lower portion of the screen
-    setCursorPosition(0, consoleHeight - 4);
-
+    
+    int uiPaddingTop = 4; // Define the amount of padding
+    setCursorPosition(0, consoleHeight - uiPaddingTop);
     std::cout << std::string(consoleWidth, '=') << std::endl;
     std::cout << "Health: " << player.getHealth()
         << " | Experience: " << player.getExperience()

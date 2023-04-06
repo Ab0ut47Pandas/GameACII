@@ -28,7 +28,7 @@ void TitleScreen::display() const {
 }
 
 int TitleScreen::menu() {
-    std::cout << GAME_TITLE << std::endl;
+    //std::cout << GAME_TITLE << std::endl;
     int choice;
 
     while (true) {
