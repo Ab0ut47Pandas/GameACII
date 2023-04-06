@@ -11,7 +11,7 @@
 
 int main() {
     hideCursor();
-
+    SubclassConsoleWindow();
     TitleScreen titleScreen;
 
     int choice = titleScreen.menu();

@@ -46,14 +46,8 @@ void displayUI(Player& player) {
 void drawStatusBar(const Player& player) {
     int consoleWidth, consoleHeight;
     getConsoleSize(consoleWidth, consoleHeight);
-    //hideCursor();
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
-    std::cout << std::endl;
+    // Move the cursor to the lower portion of the screen
+    setCursorPosition(0, consoleHeight - 4);
 
     std::cout << std::string(consoleWidth, '=') << std::endl;
     std::cout << "Health: " << player.getHealth()

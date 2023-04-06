@@ -1,5 +1,6 @@
 #include "ConsoleUtils.h"
 
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #else
@@ -36,15 +37,13 @@ void setCursorPosition(int x, int y) {
 }
 
 void setConsoleFullScreen() {
-    int screenWidth, screenHeight;
-    getConsoleSize(screenWidth, screenHeight);
+    HWND consoleWindow = GetConsoleWindow();
+    RECT desktopRect;
+    HWND desktopWindow = GetDesktopWindow();
+    GetWindowRect(desktopWindow, &desktopRect);
 
-    // Calculate the number of rows and columns based on your monitor's aspect ratio
-    int desiredCols = screenWidth * 8 / 10; // Assuming an 8x10 character size
-    int desiredRows = screenHeight;
-
-    setConsoleBufferSize(desiredCols, desiredRows);
-    setConsoleWindowSize(desiredCols, desiredRows);
+    SetWindowLong(consoleWindow, GWL_STYLE, GetWindowLong(consoleWindow, GWL_STYLE) | WS_MAXIMIZEBOX);
+    ShowWindow(consoleWindow, SW_MAXIMIZE);
 }
 
 void setConsoleSize720p() {
@@ -128,4 +127,29 @@ void setConsoleSize720p() {
             screen.dwSize.X * screen.dwSize.Y, topLeft, &written
         );
         SetConsoleCursorPosition(console, topLeft);
+    }
+
+    LRESULT CALLBACK ConsoleWindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    {
+        switch (uMsg)
+        {
+        case WM_GETMINMAXINFO:
+        {
+            LPMINMAXINFO lpMMI = (LPMINMAXINFO)lParam;
+            lpMMI->ptMinTrackSize.x = 128 * 8;  // 128 columns with 8 pixels per character
+            lpMMI->ptMinTrackSize.y = 40 * 12;  // 40 rows with 12 pixels per character
+        }
+        return 0;
+
+        default:
+            break;
+        }
+
+        return DefWindowProc(hwnd, uMsg, wParam, lParam);
+    }
+
+    void SubclassConsoleWindow() {
+        HWND consoleWindow = GetConsoleWindow();
+        SetWindowLongPtr(consoleWindow, GWLP_USERDATA, (LONG_PTR)ConsoleWindowProc);
+        SetWindowLongPtr(consoleWindow, GWLP_WNDPROC, (LONG_PTR)ConsoleWindowProc);
     }
