@@ -4,7 +4,7 @@
 #include <queue>
 #include <utility>
 #include <algorithm>
-
+#include <stack>
 enum Direction {
     UP,
     DOWN,
@@ -13,20 +13,29 @@ enum Direction {
 };
 
 void floodFill(std::vector<std::string>& map, int x, int y, char oldChar, char newChar) {
-    if (x < 0 || x >= map[0].size() || y < 0 || y >= map.size()) {
-        return;
+    std::stack<std::pair<int, int>> stack;
+    stack.push({ x, y });
+
+    while (!stack.empty()) {
+        int currentX = stack.top().first;
+        int currentY = stack.top().second;
+        stack.pop();
+
+        if (currentX < 0 || currentX >= map[0].size() || currentY < 0 || currentY >= map.size()) {
+            continue;
+        }
+
+        if (map[currentY][currentX] != oldChar) {
+            continue;
+        }
+
+        map[currentY][currentX] = newChar;
+
+        stack.push({ currentX - 1, currentY });
+        stack.push({ currentX + 1, currentY });
+        stack.push({ currentX, currentY - 1 });
+        stack.push({ currentX, currentY + 1 });
     }
-
-    if (map[y][x] != oldChar) {
-        return;
-    }
-
-    map[y][x] = newChar;
-
-    floodFill(map, x - 1, y, oldChar, newChar);
-    floodFill(map, x + 1, y, oldChar, newChar);
-    floodFill(map, x, y - 1, oldChar, newChar);
-    floodFill(map, x, y + 1, oldChar, newChar);
 }
 
 std::vector<std::string> Dungeon::generate(int width, int height) {

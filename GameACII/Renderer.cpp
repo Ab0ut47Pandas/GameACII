@@ -9,7 +9,7 @@
 
 
 
-void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player) {
+void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius, bool inTown, Player& player, bool lineOfSightEnabled) {
     int consoleWidth, consoleHeight;
     getConsoleSize(consoleWidth, consoleHeight);
 
@@ -19,6 +19,21 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
     int uiPaddingTop = 4;
     int paddingTop = (consoleHeight - mapHeight - 4) / 2;
     int paddingLeft = 20 + (consoleWidth - mapWidth) / 2;
+
+    // Draw the border
+    for (int i = paddingTop - 1; i <= paddingTop + mapHeight; ++i) {
+        setCursorPosition(paddingLeft - 1, i);
+        std::cout << (i == paddingTop - 1 || i == paddingTop + mapHeight ? '+' : '|');
+        setCursorPosition(paddingLeft + mapWidth, i);
+        std::cout << (i == paddingTop - 1 || i == paddingTop + mapHeight ? '+' : '|');
+    }
+
+    for (int j = paddingLeft; j <= paddingLeft + mapWidth; ++j) {
+        setCursorPosition(j, paddingTop - 1);
+        std::cout << '-';
+        setCursorPosition(j, paddingTop + mapHeight);
+        std::cout << '-';
+    }
 
     int startY = (playerY - MAX_GAME_AREA_ROWS / 2) > 0 ? playerY - MAX_GAME_AREA_ROWS / 2 : 0;
     int endY = (playerY + MAX_GAME_AREA_ROWS / 2) < mapHeight ? playerY + MAX_GAME_AREA_ROWS / 2 : mapHeight;
@@ -31,7 +46,7 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
             if (inTown) {
                 std::cout << map[i][j];
             }
-            else {
+            /*else {
                 int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
                 if (distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
                     std::cout << map[i][j];
@@ -39,7 +54,22 @@ void draw(const std::vector<std::string>& map, int playerX, int playerY, int vis
                 else {
                     std::cout << ' ';
                 }
+            }*/
+            else {
+                if (lineOfSightEnabled) {
+                    int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
+                    if (distance <= visibilityRadius * visibilityRadius && LineOfSight::hasLineOfSight(playerX, playerY, j, i, map)) {
+                        std::cout << map[i][j];
+                    }
+                    else {
+                        std::cout << ' ';
+                    }
+                }
+                else {
+                    std::cout << map[i][j];
+                }
             }
+
         }
     }
 

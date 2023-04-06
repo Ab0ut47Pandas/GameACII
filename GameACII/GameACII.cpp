@@ -40,12 +40,14 @@ int main() {
             }
         }
     }
+
+    bool lineOfSightEnabled = true;
     bool displayUIFlag = false;
     bool exitReached = false;
     bool enterDungeon = false;
     while (true) {
         if (!displayUIFlag) {
-            draw(map, playerX, playerY, visibilityRadius, inTown, player);
+            draw(map, playerX, playerY, visibilityRadius, inTown, player, lineOfSightEnabled);
         }
 
         int newX = playerX, newY = playerY;
@@ -67,6 +69,10 @@ int main() {
         else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
             newX++;
             keyPressed = true;
+        }
+        else if (GetAsyncKeyState('I') & 0x8000) {
+            lineOfSightEnabled = !lineOfSightEnabled;
+            Sleep(200); // Add a small delay to prevent the UI from flickering
         }
         else if (GetAsyncKeyState('U') & 0x8000) {
             displayUI(player);
