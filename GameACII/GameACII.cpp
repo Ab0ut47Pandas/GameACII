@@ -1,6 +1,7 @@
 ﻿// GameACII.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
@@ -9,7 +10,35 @@
 
 
 
+
 int main() {
+    if (!glfwInit()) {
+        std::cerr << "Failed to initialize GLFW" << std::endl;
+        return -1;
+    }
+
+    GLFWwindow* window = glfwCreateWindow(800, 600, "GameACII", NULL, NULL);
+    if (!window) {
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    // Main game loop
+    while (!glfwWindowShouldClose(window)) {
+        // TODO: Update game logic and render here
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
     hideCursor();
 
     TitleScreen titleScreen;
