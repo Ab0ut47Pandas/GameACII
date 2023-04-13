@@ -140,16 +140,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConsoleUtils.cpp" />
+    <ClCompile Include="Dungeon.cpp" />
     <ClCompile Include="GameACII.cpp" />
-    <ClCompile Include="MapGenerator.cpp" />
+    <ClCompile Include="GameConfig.cpp" />
+    <ClCompile Include="GameLogic.cpp" />
+    <ClCompile Include="GameUI.cpp" />
+    <ClCompile Include="Inventory.cpp" />
+    <ClCompile Include="LineOfSight.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="SaveLoad.cpp" />
+    <ClCompile Include="Town.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="TitleScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConsoleUtils.h" />
-    <ClInclude Include="MapGenerator.h" />
+    <ClInclude Include="Dungeon.h" />
+    <ClInclude Include="GameConfig.h" />
+    <ClInclude Include="GameIncludes.h" />
+    <ClInclude Include="GameLogic.h" />
+    <ClInclude Include="GameUI.h" />
+    <ClInclude Include="Inventory.h" />
+    <ClInclude Include="LineOfSight.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="SaveLoad.h" />
+    <ClInclude Include="Town.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TitleScreen.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

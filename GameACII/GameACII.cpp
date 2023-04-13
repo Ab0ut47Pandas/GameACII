@@ -4,99 +4,100 @@
 #include <iostream>
 #include <conio.h>
 #include <windows.h>
-#include "ConsoleUtils.h"
-#include "MapGenerator.h"
-#include "TitleScreen.h"
+#include <cmath>
+#include "GameIncludes.h"
 
-const int mapWidth = 50;
-const int mapHeight = 25;
-const char playerSymbol = '@';
 
-void draw(const std::vector<std::string>& map, int playerX, int playerY, int visibilityRadius) {
-    system("cls");
-
-    int consoleWidth, consoleHeight;
-    getConsoleSize(consoleWidth, consoleHeight);
-
-    int mapHeight = static_cast<int>(map.size());
-    int mapWidth = static_cast<int>(map[0].length());
-
-    int paddingTop = (consoleHeight - mapHeight) / 2;
-    int paddingLeft = (consoleWidth - mapWidth) / 2;
-
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
-            int distance = (playerX - j) * (playerX - j) + (playerY - i) * (playerY - i);
-            setCursorPosition(paddingLeft + j, paddingTop + i);
-            if (distance <= visibilityRadius * visibilityRadius) {
-                std::cout << map[i][j];
-            }
-            else {
-                std::cout << ' ';
-            }
-        }
-    }
-}
-
-bool isPassable(const std::vector<std::string>& map, int x, int y) {
-    return (map[y][x] == '.' || map[y][x] == playerSymbol);
-}
 
 int main() {
+    hideCursor();
+    SubclassConsoleWindow();
     TitleScreen titleScreen;
 
-    titleScreen.display();
     int choice = titleScreen.menu();
 
     if (choice == 2) { // Exit if the choice is "Exit"
         return 0;
     }
+    system("cls");
+    Player player;
 
-    int playerX, playerY;
+    int playerX = 0, playerY = 0;
     int visibilityRadius = 10; // Set the desired visibility radius.
 
-    auto map = MapGenerator::generateMap(mapWidth, mapHeight);
+    bool inTown = true;
+    int townWidth = 20, townHeight = 10;
+    std::vector<std::string> town = generateTown(townWidth, townHeight);
+    auto map = town; // Set the initial map to town
 
-    // Find an open space near the entrance for the player
-    for (int i = 0; i < mapHeight; ++i) {
-        for (int j = 0; j < mapWidth; ++j) {
-            if (map[i][j] == 'E') {
+    // Find the player's starting position in the town
+    for (int i = 0; i < townHeight; ++i) {
+        for (int j = 0; j < townWidth; ++j) {
+            if (town[i][j] == '.') {
                 playerX = j;
                 playerY = i;
                 break;
             }
         }
     }
-   
+    bool displayUIFlag = false;
+    bool exitReached = false;
+    bool enterDungeon = false;
     while (true) {
-        draw(map, playerX, playerY, visibilityRadius);
-        char input = _getch();
-        int newX = playerX, newY = playerY;
-
-        switch (input) {
-        case 72: // Up
-            newY--;
-            break;
-        case 80: // Down
-            newY++;
-            break;
-        case 75: // Left
-            newX--;
-            break;
-        case 77: // Right
-            newX++;
-            break;
-        default:
-            continue;
+        if (!displayUIFlag) {
+            draw(map, playerX, playerY, visibilityRadius, inTown, player);
         }
 
-        if (isPassable(map, newX, newY)) {
+        int newX = playerX, newY = playerY;
+        bool keyPressed = false;
+
+        // Check arrow keys and U key state
+        if (GetAsyncKeyState(VK_UP) & 0x8000) {
+            newY--;
+            keyPressed = true;
+        }
+        else if (GetAsyncKeyState(VK_DOWN) & 0x8000) {
+            newY++;
+            keyPressed = true;
+        }
+        else if (GetAsyncKeyState(VK_LEFT) & 0x8000) {
+            newX--;
+            keyPressed = true;
+        }
+        else if (GetAsyncKeyState(VK_RIGHT) & 0x8000) {
+            newX++;
+            keyPressed = true;
+        }
+        else if (GetAsyncKeyState('U') & 0x8000) {
+            displayUI(player);
+            displayUIFlag = true;
+            Sleep(200); // Add a small delay to prevent the UI from flickering
+        }
+        else {
+            displayUIFlag = false;
+            Sleep(10); // Add a small delay to reduce CPU usage
+        }
+
+        if (keyPressed) {
+            Sleep(150); // Add a delay after detecting arrow key input to increase movement precision
+        }
+
+        if (isPassable(map, newX, newY, exitReached, enterDungeon)) {
             map[playerY][playerX] = '.';
             playerX = newX;
             playerY = newY;
             map[playerY][playerX] = playerSymbol;
+
+            if (inTown && enterDungeon) {
+                inTown = false;
+                loadNewMap(map, playerX, playerY, dungeonWidth, dungeonHeight);
+                enterDungeon = false;
+            }
+            else if (exitReached) {
+                loadNewMap(map, playerX, playerY, dungeonWidth, dungeonHeight);
+                exitReached = false;
+            }
         }
     }
-
     return 0;
 }
